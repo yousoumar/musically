@@ -38,6 +38,10 @@ This is a simple API REST to manage a music library.
     ```bash
     docker compose up -d
    ```
+   The following services will be available:
+    - PostgreSQL: [http://localhost:5432](http://localhost:5432)
+    - Adminer: [http://localhost:8081](http://localhost:8081)(for database administration)
+   
 5. Run the application:
 
     ```bash
