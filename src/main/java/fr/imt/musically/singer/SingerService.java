@@ -5,8 +5,8 @@ import java.util.List;
 public class SingerService {
     private final SingerRepository repository;
 
-    public SingerService(SingerRepository repository){
-        this.repository=repository;
+    public SingerService(SingerRepository repository) {
+        this.repository = repository;
 
     }
 

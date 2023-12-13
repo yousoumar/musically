@@ -15,6 +15,7 @@ public class SingerController {
     SingerController(SingerRepository repository) {
         this.repository = repository;
     }
+
     @GetMapping
     List<Singer> getAllSinger() {
         return this.repository.findAll();

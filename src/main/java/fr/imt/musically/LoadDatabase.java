@@ -1,9 +1,8 @@
 package fr.imt.musically;
 
 
-
-import fr.imt.musically.singer.SingerRepository;
 import fr.imt.musically.singer.Singer;
+import fr.imt.musically.singer.SingerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
