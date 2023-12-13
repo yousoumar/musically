@@ -1,4 +1,4 @@
-package fr.imt.project;
+package fr.imt.musically;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
