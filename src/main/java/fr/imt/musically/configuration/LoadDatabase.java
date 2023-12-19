@@ -1,4 +1,4 @@
-package fr.imt.musically;
+package fr.imt.musically.configuration;
 
 
 import fr.imt.musically.singer.Singer;
