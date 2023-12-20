@@ -1,6 +1,9 @@
 package fr.imt.musically.singer;
 
+import fr.imt.musically.song.Song;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "singers")
@@ -12,6 +15,9 @@ public class Singer {
     private String firstName;
 
     private String lastName;
+
+    @OneToMany(mappedBy = "id")
+    private List<Song> songs;
 
     public Singer(String firstName, String lastName) {
         this.firstName = firstName;

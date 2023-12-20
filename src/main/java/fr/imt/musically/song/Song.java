@@ -72,10 +72,12 @@ public class Song {
 
     public void addSinger(Singer singer) {
         this.singers.add(singer);
+        singer.getSongs().add(this);
     }
 
     public void removeSinger(Singer singer) {
         this.singers.remove(singer);
+        singer.getSongs().remove(this);
     }
 
     @Override
