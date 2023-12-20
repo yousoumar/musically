@@ -19,7 +19,7 @@ public class Song {
 
     private Double rating;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "id")
     private List<Singer> singers;
 
     protected Song() {}
