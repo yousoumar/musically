@@ -3,7 +3,10 @@ package fr.imt.musically.singer;
 import fr.imt.musically.song.Song;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "singers")
@@ -16,15 +19,20 @@ public class Singer {
 
     private String lastName;
 
-    @OneToMany(mappedBy = "id")
-    private List<Song> songs;
+    @ManyToMany
+    @JoinTable(
+        name = "singer_song",
+        joinColumns = @JoinColumn(name = "singer_id"),
+        inverseJoinColumns = @JoinColumn(name = "song_id")
+    )
+    private List<Song> songs = new ArrayList<>();
 
     public Singer(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Singer() {
+    protected Singer() {
     }
 
     public Long getId() {
@@ -55,9 +63,6 @@ public class Singer {
         return songs;
     }
 
-    public void setSongs(List<Song> songs) {
-        this.songs = songs;
-    }
 
     public void addSong(Song song){
         this.songs.add(song);
