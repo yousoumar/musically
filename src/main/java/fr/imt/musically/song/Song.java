@@ -53,6 +53,10 @@ public class Song {
         return id;
     }
 
+    public UUID getSongId() {
+        return songId;
+    }
+
     public String getTitle() {
         return title;
     }

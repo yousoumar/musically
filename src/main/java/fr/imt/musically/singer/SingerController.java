@@ -1,5 +1,6 @@
 package fr.imt.musically.singer;
 
+import fr.imt.musically.song.Song;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -56,8 +57,8 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<List<Singer>> getAllSingers() {
-        return ResponseEntity.ok(service.getAllSingers());
+    public ResponseEntity<List<Singer>> getAllSingers(@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
+        return ResponseEntity.ok(service.getAllSingers(firstName, lastName));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -78,7 +79,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Object> createSinger(@Valid @RequestBody SingerBodyRequest singer) {
+    public ResponseEntity<Singer> createSinger(@Valid @RequestBody SingerBodyRequest singer) {
         return ResponseEntity.ok(service.createSinger(singer));
     }
 
@@ -97,9 +98,49 @@ public class SingerController {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // GET api/singers/?firstName=Nancy&lastName=Ajram (return all singers with the first name Nancy and the last name Ajram)
-    // GET api/singers/?firstName=Nancy (return all singers with the first name Nancy)
-    // GET api/singers/?lastName=Ajram (return all singers with the last name Ajram)
-    // Delete api/singers/{id} (delete the singer with the id {id})
-    // Put api/singers/firstName/lastName/rating (update the rating of the singer with the first name firstName and the last name lastName)
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Delete a singer",
+        description = "Delete a singer in the database",
+        tags = {"singers"},
+
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Deleted a singer"
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = @Content
+            )
+        }
+    )
+    public ResponseEntity<Object> deleteSinger(@Valid @RequestBody SingerBodyRequest singer) {
+        service.deleteSinger(singer);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(path = "/{singer_id}/{song_id}/{rating}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Update a singer",
+        description = "Update a singer in the database",
+        tags = {"singers"},
+
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Updated a singer"
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = @Content
+            )
+        }
+    )
+    public ResponseEntity<Song> updateSinger(@PathVariable("singer_id") String singerId, @PathVariable("song_id") String songId, @PathVariable("rating") String rating) {
+
+        return ResponseEntity.ok(service.updateSongRatingOfASinger(singerId, songId, Double.parseDouble(rating)));
+    }
 }
