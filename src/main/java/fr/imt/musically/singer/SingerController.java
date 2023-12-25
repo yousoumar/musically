@@ -1,6 +1,7 @@
 package fr.imt.musically.singer;
 
 import fr.imt.musically.song.Song;
+import fr.imt.musically.song.SongBodyRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -142,5 +143,27 @@ public class SingerController {
     public ResponseEntity<Song> updateSinger(@PathVariable("singer_id") String singerId, @PathVariable("song_id") String songId, @PathVariable("rating") String rating) {
 
         return ResponseEntity.ok(service.updateSongRatingOfASinger(singerId, songId, Double.parseDouble(rating)));
+    }
+
+    @PutMapping(path = "/{singer_id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Add songs to a singer",
+        description = "Update a singer in the database by adding transacyional songs to it",
+        tags = {"singers"},
+
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Updated a singer"
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = @Content
+            )
+        }
+    )
+    public ResponseEntity<Singer> addSongs(@PathVariable("singer_id") String singerId, @Valid @RequestBody List<SongBodyRequest> songBody) {
+        return ResponseEntity.ok(service.addSongs(singerId, songBody));
     }
 }

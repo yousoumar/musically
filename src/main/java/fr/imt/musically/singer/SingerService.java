@@ -1,7 +1,9 @@
 package fr.imt.musically.singer;
 
 import fr.imt.musically.song.Song;
+import fr.imt.musically.song.SongBodyRequest;
 import fr.imt.musically.song.SongRepository;
+import fr.imt.musically.song.SongService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -19,10 +21,13 @@ public class SingerService {
 
     private final Validator validator;
 
-    public SingerService(SingerRepository repository, Validator validator, SongRepository songRepository) {
+    private final SongService songService;
+
+    public SingerService(SingerRepository repository, Validator validator, SongRepository songRepository, SongService songService) {
         this.repository = repository;
         this.songRepository = songRepository;
         this.validator = validator;
+        this.songService = songService;
     }
 
     public List<Singer> getAllSingers(String firstName, String lastName) {
@@ -96,5 +101,20 @@ public class SingerService {
         song.setRating(rating);
 
         return songRepository.save(song);
+    }
+
+    public Singer addSongs(String singerId, List<SongBodyRequest> songBody) throws ConstraintViolationException{
+        Singer singer = repository.findBySingerId(UUID.fromString(singerId));
+        if(singer == null){
+            throw new IllegalArgumentException("This singer doesn't exist");
+        }
+
+        Set<Song> songs = songService.addSongs(singer, songBody);
+
+        if(songs.isEmpty()){
+            throw new IllegalArgumentException("The addition of songs failed!");
+        }
+
+        return repository.save(singer);
     }
 }
