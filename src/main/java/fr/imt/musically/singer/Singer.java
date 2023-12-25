@@ -1,19 +1,21 @@
 package fr.imt.musically.singer;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.imt.musically.song.Song;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "singers")
 public class Singer {
+    private final UUID singerId = UUID.randomUUID();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
-
     private String firstName;
 
     private String lastName;
@@ -24,7 +26,7 @@ public class Singer {
         joinColumns = @JoinColumn(name = "singer_id"),
         inverseJoinColumns = @JoinColumn(name = "song_id")
     )
-    @JsonIgnoreProperties("singers")
+    @JsonIgnore
     private Set<Song> songs = new HashSet<>();
 
     public Singer(String firstName, String lastName) {
@@ -37,6 +39,10 @@ public class Singer {
 
     public Long getId() {
         return id;
+    }
+
+    public UUID getSingerId() {
+        return singerId;
     }
 
     public String getFirstName() {
