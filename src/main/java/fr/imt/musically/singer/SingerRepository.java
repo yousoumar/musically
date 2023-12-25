@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SingerRepository extends JpaRepository<Singer, Long> {
 
-
+    Singer findByFirstNameAndLastName(String firstName, String lastName);
 }

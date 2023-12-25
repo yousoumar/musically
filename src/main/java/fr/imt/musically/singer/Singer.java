@@ -1,11 +1,10 @@
 package fr.imt.musically.singer;
 
+import com.fasterxml.jackson.annotation.*;
 import fr.imt.musically.song.Song;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,7 +24,8 @@ public class Singer {
         joinColumns = @JoinColumn(name = "singer_id"),
         inverseJoinColumns = @JoinColumn(name = "song_id")
     )
-    private List<Song> songs = new ArrayList<>();
+    @JsonIgnoreProperties("singers")
+    private Set<Song> songs = new HashSet<>();
 
     public Singer(String firstName, String lastName) {
         this.firstName = firstName;
@@ -37,10 +37,6 @@ public class Singer {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -59,17 +55,17 @@ public class Singer {
         this.lastName = lastName;
     }
 
-    public List<Song> getSongs() {
+    public Set<Song> getSongs() {
         return songs;
     }
 
 
-    public void addSong(Song song){
+    public void addSong(Song song) {
         this.songs.add(song);
         song.getSingers().add(this);
     }
 
-    public void removeSong(Song song){
+    public void removeSong(Song song) {
         this.songs.remove(song);
         song.getSingers().remove(this);
     }

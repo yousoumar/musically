@@ -1,11 +1,10 @@
 package fr.imt.musically.song;
 
+import com.fasterxml.jackson.annotation.*;
 import fr.imt.musically.singer.Singer;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,31 +23,29 @@ public class Song {
 
     @ManyToMany
     @JoinTable(
-            name = "singer_song",
-            joinColumns = @JoinColumn(name = "song_id"),
-            inverseJoinColumns = @JoinColumn(name = "singer_id")
+        name = "singer_song",
+        joinColumns = @JoinColumn(name = "song_id"),
+        inverseJoinColumns = @JoinColumn(name = "singer_id")
     )
-    private List<Singer> singers;
+    @JsonIgnoreProperties("songs")
+    private Set<Singer> singers;
 
-    protected Song() {}
-    public Song(String title, Integer year, Double rating, List<Singer> singers) {
+    protected Song() {
+    }
+
+    public Song(String title, Integer year, Double rating, Set<Singer> singers) {
         this.title = title;
         this.year = year;
         this.rating = rating;
         this.singers = singers;
-
     }
 
     public Song(String title, Integer year, Double rating, Singer... singers) {
-        this(title, year, rating, new ArrayList<>(List.of(singers)));
+        this(title, year, rating, new HashSet<>(Set.of(singers)));
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -75,7 +72,7 @@ public class Song {
         this.rating = rating;
     }
 
-    public List<Singer> getSingers() {
+    public Set<Singer> getSingers() {
         return singers;
     }
 
@@ -92,11 +89,11 @@ public class Song {
     @Override
     public String toString() {
         return "Song{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", year=" + year +
-                ", rating=" + rating +
-                ", singers=" + singers.stream().map(Singer::getFullName).reduce("", (acc, singer) -> acc + ", " + singer) +
-                '}';
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", year=" + year +
+            ", rating=" + rating +
+            ", singers=" + singers.stream().map(Singer::getFullName).reduce("", (acc, singer) -> acc + ", " + singer) +
+            '}';
     }
 }
