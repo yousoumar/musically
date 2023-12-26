@@ -20,7 +20,7 @@ public class Singer {
 
     private String lastName;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "singer_song",
         joinColumns = @JoinColumn(name = "singer_id"),

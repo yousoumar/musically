@@ -115,6 +115,6 @@ public class SingerService {
             throw new IllegalArgumentException("The addition of songs failed!");
         }
 
-        return repository.save(singer);
+        return singer;
     }
 }

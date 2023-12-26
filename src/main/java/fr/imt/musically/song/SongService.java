@@ -45,6 +45,8 @@ public class SongService {
 
                 throw new ConstraintViolationException(sb.toString(), violations);
             }
+// why isn't generating a new id for the song?
+// why is it giving that the pKey already exists?
 
             singer.addSong(new Song(song.getTitle(), song.getYear(), song.getRating()));
         }
