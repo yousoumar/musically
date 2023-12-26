@@ -1,6 +1,7 @@
 package fr.imt.musically.singer;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,10 @@ public class SingerController {
         description = "Get all singers from the database",
         tags = {"singers"},
         responses = {
-            @ApiResponse(responseCode = "200", description = "Found all singers")
+            @ApiResponse(
+                responseCode = "200",
+                description = "Found all singers"
+            )
         }
     )
     public ResponseEntity<List<Singer>> getAllSingers() {
