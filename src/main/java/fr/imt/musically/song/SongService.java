@@ -30,6 +30,7 @@ public class SongService {
         return songRepository.findAll();
     }
 
+    // It is always transactional with JPA
     @Transactional(rollbackOn = Exception.class)
     public Set<Song> addSongs(Singer singer, List<SongBodyRequest> songBody) {
 
@@ -45,13 +46,14 @@ public class SongService {
 
                 throw new ConstraintViolationException(sb.toString(), violations);
             }
-// why isn't generating a new id for the song?
-// why is it giving that the pKey already exists?
 
-            singer.addSong(new Song(song.getTitle(), song.getYear(), song.getRating()));
-        }
+            Song s = new Song(song.getTitle(), song.getYear(), song.getRating(), singer);
 
-        return singerRepository.save(singer).getSongs();
+            songRepository.save(s);
+
+            }
+
+        return singer.getSongs();
 
     }
 

@@ -1,6 +1,7 @@
 package fr.imt.musically.singer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.imt.musically.song.Song;
 import jakarta.persistence.*;
 
