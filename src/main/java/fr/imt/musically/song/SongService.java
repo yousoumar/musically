@@ -1,11 +1,11 @@
 package fr.imt.musically.song;
 
+import fr.imt.musically.request.AddSingerRequestBody;
+import fr.imt.musically.request.BodyValidator;
+import fr.imt.musically.request.SongRequestBody;
 import fr.imt.musically.singer.Singer;
 import fr.imt.musically.singer.SingerRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +15,15 @@ import java.util.UUID;
 @Service
 public class SongService {
 
-    private final SongRepository songRepository;
     private final SingerRepository singerRepository;
+    private final SongRepository songRepository;
 
-    private final Validator validator;
+    private final BodyValidator bodyValidator;
 
-    public SongService(SongRepository repository, SingerRepository singerRepository, Validator validator){
-        this.songRepository = repository;
+    public SongService(SongRepository songRepository, SingerRepository singerRepository, BodyValidator bodyValidator){
+        this.songRepository = songRepository;
         this.singerRepository = singerRepository;
-        this.validator = validator;
+        this.bodyValidator = bodyValidator;
     }
 
     public List<Song> getAllSongs() {
@@ -32,21 +32,10 @@ public class SongService {
 
     // It is always transactional with JPA
     @Transactional(rollbackOn = Exception.class)
-    public Set<Song> addSongs(Singer singer, List<SongBodyRequest> songBody) {
+    public Set<Song> createSongs(Singer singer, List<SongRequestBody> songBody) {
 
-        for (SongBodyRequest song : songBody) {
-            Set<ConstraintViolation<SongBodyRequest>> violations = validator.validate(song);
-
-            if (!violations.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                for (ConstraintViolation<SongBodyRequest> violation : violations) {
-                    sb.append(violation.getMessage());
-                    sb.append("\n");
-                }
-
-                throw new ConstraintViolationException(sb.toString(), violations);
-            }
-
+        for (SongRequestBody song : songBody) {
+            bodyValidator.validateBodyRequest(song);
             Song s = new Song(song.getTitle(), song.getYear(), song.getRating(), singer);
 
             songRepository.save(s);
@@ -54,7 +43,27 @@ public class SongService {
             }
 
         return singer.getSongs();
-
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    public Song addSingers(String songId, List<AddSingerRequestBody> singersBody) {
+        Song song = songRepository.findBySongId(UUID.fromString(songId));
+
+        if (song == null) {
+            throw new IllegalArgumentException("This song does not exist");
+        }
+
+        for (AddSingerRequestBody singerBody : singersBody) {
+            bodyValidator.validateBodyRequest(singerBody);
+            Singer singer = singerRepository.findBySingerId(UUID.fromString(singerBody.getSingerId()));
+
+            if (singer == null) {
+                throw new IllegalArgumentException("This singer does not exist");
+            }
+            singer.addSong(song);
+            singerRepository.save(singer);
+        }
+
+        return song;
+    }
 }

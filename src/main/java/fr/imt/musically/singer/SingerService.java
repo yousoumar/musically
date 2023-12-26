@@ -1,16 +1,15 @@
 package fr.imt.musically.singer;
 
+import fr.imt.musically.request.BodyValidator;
+import fr.imt.musically.request.SingerRequestBody;
 import fr.imt.musically.song.Song;
-import fr.imt.musically.song.SongBodyRequest;
+import fr.imt.musically.request.SongRequestBody;
 import fr.imt.musically.song.SongRepository;
 import fr.imt.musically.song.SongService;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -19,15 +18,15 @@ public class SingerService {
 
     private final SongRepository songRepository;
 
-    private final Validator validator;
-
     private final SongService songService;
 
-    public SingerService(SingerRepository repository, Validator validator, SongRepository songRepository, SongService songService) {
+    private final BodyValidator bodyValidator;
+
+    public SingerService(SingerRepository repository, SongRepository songRepository, SongService songService, BodyValidator bodyValidator) {
         this.repository = repository;
         this.songRepository = songRepository;
-        this.validator = validator;
         this.songService = songService;
+        this.bodyValidator = bodyValidator;
     }
 
     public List<Singer> getAllSingers(String firstName, String lastName) {
@@ -48,8 +47,13 @@ public class SingerService {
         return repository.findAll();
     }
 
-    public Singer createSinger(SingerBodyRequest singer) throws IllegalArgumentException {
-        
+    private Singer getSingerFromBodyRequest(SingerRequestBody singerBody){
+        bodyValidator.validateBodyRequest(singerBody);
+        return repository.findByFirstNameAndLastName(singerBody.getFirstName(), singerBody.getLastName());
+    }
+
+    public Singer createSinger(SingerRequestBody singer) throws IllegalArgumentException {
+
         if (getSingerFromBodyRequest(singer) != null) {
             throw new IllegalArgumentException("This singer already exists");
         }
@@ -57,29 +61,13 @@ public class SingerService {
         return repository.save(new Singer(singer.getFirstName(), singer.getLastName()));
     }
 
-    public void deleteSinger(SingerBodyRequest singerBody) throws IllegalArgumentException {
+    public void deleteSinger(SingerRequestBody singerBody) throws IllegalArgumentException {
         Singer singer = getSingerFromBodyRequest(singerBody);
         if(singer == null){
             throw new IllegalArgumentException("This singer doesn't exist");
         }
 
         repository.delete(singer);
-    }
-
-    private Singer getSingerFromBodyRequest(SingerBodyRequest singerBody) {
-        Set<ConstraintViolation<SingerBodyRequest>> violations = validator.validate(singerBody);
-
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<SingerBodyRequest> violation : violations) {
-                sb.append(violation.getMessage());
-                sb.append("\n");
-            }
-
-            throw new ConstraintViolationException(sb.toString(), violations);
-        }
-
-        return repository.findByFirstNameAndLastName(singerBody.getFirstName(), singerBody.getLastName());
     }
 
     public Song updateSongRatingOfASinger(String singerId, String songId, Double rating) {
@@ -103,17 +91,13 @@ public class SingerService {
         return songRepository.save(song);
     }
 
-    public Singer addSongs(String singerId, List<SongBodyRequest> songBody) throws ConstraintViolationException{
+    public Singer addSongs(String singerId, List<SongRequestBody> songBody) throws ConstraintViolationException{
         Singer singer = repository.findBySingerId(UUID.fromString(singerId));
         if(singer == null){
             throw new IllegalArgumentException("This singer doesn't exist");
         }
 
-        Set<Song> songs = songService.addSongs(singer, songBody);
-
-        if(songs.isEmpty()){
-            throw new IllegalArgumentException("The addition of songs failed!");
-        }
+        songService.createSongs(singer, songBody);
 
         return singer;
     }

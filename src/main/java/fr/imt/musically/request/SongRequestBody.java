@@ -1,8 +1,8 @@
-package fr.imt.musically.song;
+package fr.imt.musically.request;
 
 import jakarta.validation.constraints.*;
 
-public class SongBodyRequest {
+public class SongRequestBody implements RequestBody {
 
     @NotBlank
     @Size(min = 2, max = 255)
@@ -17,6 +17,7 @@ public class SongBodyRequest {
     @Min(0)
     @Max(5)
     private Double rating;
+
 
     public String getTitle() {
         return this.title;

@@ -1,7 +1,10 @@
 package fr.imt.musically.singer;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import fr.imt.musically.ViewApplication;
+import fr.imt.musically.request.SingerRequestBody;
 import fr.imt.musically.song.Song;
-import fr.imt.musically.song.SongBodyRequest;
+import fr.imt.musically.request.SongRequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -27,6 +30,7 @@ public class SingerController {
         this.service = service;
     }
 
+    @JsonView(ViewApplication.SingerWithoutSongsView.class)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Get all singers",
@@ -80,7 +84,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> createSinger(@Valid @RequestBody SingerBodyRequest singer) {
+    public ResponseEntity<Singer> createSinger(@Valid @RequestBody SingerRequestBody singer) {
         return ResponseEntity.ok(service.createSinger(singer));
     }
 
@@ -117,7 +121,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Object> deleteSinger(@Valid @RequestBody SingerBodyRequest singer) {
+    public ResponseEntity<Object> deleteSinger(@Valid @RequestBody SingerRequestBody singer) {
         service.deleteSinger(singer);
         return ResponseEntity.noContent().build();
     }
@@ -163,7 +167,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> addSongs(@PathVariable("singer_id") String singerId, @Valid @RequestBody List<SongBodyRequest> songBody) {
+    public ResponseEntity<Singer> addSongs(@PathVariable("singer_id") String singerId, @Valid @RequestBody List<SongRequestBody> songBody) {
         return ResponseEntity.ok(service.addSongs(singerId, songBody));
     }
 }
