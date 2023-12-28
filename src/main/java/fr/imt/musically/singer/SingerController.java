@@ -1,11 +1,16 @@
 package fr.imt.musically.singer;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import fr.imt.musically.ViewApplication;
+import fr.imt.musically.request.SingerRequestBody;
 import fr.imt.musically.song.Song;
+import fr.imt.musically.request.SongRequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +31,7 @@ public class SingerController {
         this.service = service;
     }
 
+    @JsonView(ViewApplication.SingerWithoutSongsView.class)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Get all singers",
@@ -34,26 +40,7 @@ public class SingerController {
         responses = {
             @ApiResponse(
                 responseCode = "200",
-                description = "Found all singers",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(
-                        value = """
-                                [
-                                    {
-                                        "id": 1,
-                                        "firstName": "Nancy",
-                                        "lastName": "Ajram"
-                                    },
-                                    {
-                                        "id": 2,
-                                        "firstName": "Taylor",
-                                        "lastName": "Swift"
-                                    }
-                                ]
-                            """
-                    )
-                )
+                description = "Found all singers"
             )
         }
     )
@@ -79,7 +66,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> createSinger(@Valid @RequestBody SingerBodyRequest singer) {
+    public ResponseEntity<Singer> createSinger(@Valid @RequestBody SingerRequestBody singer) {
         return ResponseEntity.ok(service.createSinger(singer));
     }
 
@@ -116,7 +103,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Object> deleteSinger(@Valid @RequestBody SingerBodyRequest singer) {
+    public ResponseEntity<Object> deleteSinger(@Valid @RequestBody SingerRequestBody singer) {
         service.deleteSinger(singer);
         return ResponseEntity.noContent().build();
     }
@@ -139,8 +126,40 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Song> updateSinger(@PathVariable("singer_id") String singerId, @PathVariable("song_id") String songId, @PathVariable("rating") String rating) {
-
+    public ResponseEntity<Song> updateSinger(
+        @PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId,
+        @PathVariable("song_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String songId,
+        @PathVariable("rating") @Pattern(regexp = "[0-5](\\.[0-9]+)?") String rating
+    ) {
         return ResponseEntity.ok(service.updateSongRatingOfASinger(singerId, songId, Double.parseDouble(rating)));
+    }
+
+    @PutMapping(path = "/{singer_id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Add songs to a singer",
+        description = "Update a singer in the database by adding transacyional songs to it",
+        tags = {"singers"},
+
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Updated a singer"
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = @Content
+            )
+        }
+    )
+    public ResponseEntity<Singer> addSongs(
+            @PathVariable("singer_id")
+            @Pattern(
+                regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
+            )
+            String singerId,
+            @Valid @RequestBody SongRequestBody... songBody
+    ) {
+        return ResponseEntity.ok(service.addSongs(singerId, songBody));
     }
 }

@@ -1,6 +1,9 @@
 package fr.imt.musically.singer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import fr.imt.musically.ViewApplication;
 import fr.imt.musically.song.Song;
 import jakarta.persistence.*;
 
@@ -11,22 +14,33 @@ import java.util.UUID;
 @Entity
 @Table(name = "singers")
 public class Singer {
+
+    @JsonView(ViewApplication.SingerWithoutSongsView.class)
     private final UUID singerId = UUID.randomUUID();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
+    @JsonView(ViewApplication.SingerWithoutSongsView.class)
     private String firstName;
 
+    @JsonView(ViewApplication.SingerWithoutSongsView.class)
     private String lastName;
 
-    @ManyToMany
+    @ManyToMany(
+        fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        }
+    )
     @JoinTable(
         name = "singer_song",
         joinColumns = @JoinColumn(name = "singer_id"),
         inverseJoinColumns = @JoinColumn(name = "song_id")
     )
-    @JsonIgnore
+    @JsonIgnoreProperties("singers")
     private Set<Song> songs = new HashSet<>();
 
     public Singer(String firstName, String lastName) {

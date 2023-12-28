@@ -1,11 +1,14 @@
 package fr.imt.musically.song;
 
+import fr.imt.musically.request.AddSingerRequestBody;
+import fr.imt.musically.request.SingerRequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +33,18 @@ public class SongController {
     )
     public ResponseEntity<List<Song>> getAllSongs() {
         return ResponseEntity.ok(service.getAllSongs());
+    }
+
+    @PutMapping(path = "/{songId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Add singers to a song",
+        description = "Add singers to a song",
+        tags = {"songs"},
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Added songs to a singer")
+        }
+    )
+    public ResponseEntity<Song> addSingersToSong(@PathVariable("songId") String songId, @Valid @RequestBody List<AddSingerRequestBody> singerBody){
+        return ResponseEntity.ok(service.addSingers(songId, singerBody));
     }
 }

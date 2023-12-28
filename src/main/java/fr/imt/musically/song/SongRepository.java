@@ -8,7 +8,7 @@ import java.util.UUID;
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
 
-    Song findByTitle(String title);
-
     Song findBySongId(UUID songId);
+
+    Song findByTitleAndYear(String title, Integer year);
 }
