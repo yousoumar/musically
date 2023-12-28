@@ -79,6 +79,10 @@ public class SingerService {
             throw new IllegalArgumentException("The rating must be between 0 and 5");
         }
 
+        if(!singer.getSongs().contains(song)){
+            throw new IllegalArgumentException("This singer doesn't have this song");
+        }
+
         song.setRating(rating);
 
         return songRepository.save(song);
