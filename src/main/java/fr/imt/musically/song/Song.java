@@ -1,11 +1,13 @@
 package fr.imt.musically.song;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.imt.musically.singer.Singer;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "songs")
@@ -13,7 +15,10 @@ public class Song {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
+
+    private final UUID songId = UUID.randomUUID();
 
     private String title;
 
@@ -46,6 +51,10 @@ public class Song {
 
     public Long getId() {
         return id;
+    }
+
+    public UUID getSongId() {
+        return songId;
     }
 
     public String getTitle() {
