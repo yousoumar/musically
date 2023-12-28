@@ -20,7 +20,7 @@ public class SongService {
 
     private final BodyValidator bodyValidator;
 
-    public SongService(SongRepository songRepository, SingerRepository singerRepository, BodyValidator bodyValidator){
+    public SongService(SongRepository songRepository, SingerRepository singerRepository, BodyValidator bodyValidator) {
         this.songRepository = songRepository;
         this.singerRepository = singerRepository;
         this.bodyValidator = bodyValidator;
@@ -32,15 +32,21 @@ public class SongService {
 
     // It is always transactional with JPA
     @Transactional(rollbackOn = Exception.class)
-    public Set<Song> createSongs(Singer singer, List<SongRequestBody> songBody) {
+    public Set<Song> createSongs(Singer singer, SongRequestBody... songBody) {
 
         for (SongRequestBody song : songBody) {
             bodyValidator.validateBodyRequest(song);
+
+            // Check if the song already exists
+            if (songRepository.findByTitleAndYear(song.getTitle(), song.getYear()) != null) {
+                throw new IllegalArgumentException("This song already exists");
+            }
+
             Song s = new Song(song.getTitle(), song.getYear(), song.getRating(), singer);
 
             songRepository.save(s);
 
-            }
+        }
 
         return singer.getSongs();
     }
@@ -55,13 +61,16 @@ public class SongService {
 
         for (AddSingerRequestBody singerBody : singersBody) {
             bodyValidator.validateBodyRequest(singerBody);
+        }
+
+        for (AddSingerRequestBody singerBody : singersBody) {
             Singer singer = singerRepository.findBySingerId(UUID.fromString(singerBody.getSingerId()));
 
             if (singer == null) {
                 throw new IllegalArgumentException("This singer does not exist");
             }
-            singer.addSong(song);
-            singerRepository.save(singer);
+            song.addSinger(singer);
+            songRepository.save(song);
         }
 
         return song;

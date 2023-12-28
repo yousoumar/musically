@@ -28,13 +28,19 @@ public class Singer {
     @JsonView(ViewApplication.SingerWithoutSongsView.class)
     private String lastName;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(
+        fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        }
+    )
     @JoinTable(
         name = "singer_song",
         joinColumns = @JoinColumn(name = "singer_id"),
         inverseJoinColumns = @JoinColumn(name = "song_id")
     )
-    @JsonView(ViewApplication.SingerWithSongsView.class)
+    @JsonIgnoreProperties("singers")
     private Set<Song> songs = new HashSet<>();
 
     public Singer(String firstName, String lastName) {

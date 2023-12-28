@@ -26,11 +26,13 @@ public class Song {
 
     private Double rating;
 
-    @ManyToMany
-    @JoinTable(
-        name = "singer_song",
-        joinColumns = @JoinColumn(name = "song_id"),
-        inverseJoinColumns = @JoinColumn(name = "singer_id")
+    @ManyToMany(
+        fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        },
+        mappedBy = "songs"
     )
     @JsonIgnoreProperties("songs")
     private Set<Singer> singers;
@@ -43,6 +45,10 @@ public class Song {
         this.year = year;
         this.rating = rating;
         this.singers = singers;
+
+        for (Singer singer : singers) {
+            singer.getSongs().add(this);
+        }
     }
 
     public Song(String title, Integer year, Double rating, Singer... singers) {

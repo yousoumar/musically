@@ -10,6 +10,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,21 +31,13 @@ public class SingerService {
     }
 
     public List<Singer> getAllSingers(String firstName, String lastName) {
-        if (firstName != null && lastName != null) {
-            Singer singer = repository.findByFirstNameAndLastName(firstName, lastName);
+        firstName = Optional.ofNullable(firstName).map(String::trim).orElse(null);
+        lastName = Optional.ofNullable(lastName).map(String::trim).orElse(null);
 
-            return singer != null ? List.of(singer) : List.of();
-        }
-        
-        if (firstName != null) {
-            return repository.findByFirstName(firstName);
-        }
-        
-        if (lastName != null) {
-            return repository.findByLastName(lastName);
-        }
-        
-        return repository.findAll();
+        return
+            (firstName != null || lastName != null) ?
+                repository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(firstName, lastName) :
+                repository.findAll();
     }
 
     private Singer getSingerFromBodyRequest(SingerRequestBody singerBody){
@@ -91,7 +84,7 @@ public class SingerService {
         return songRepository.save(song);
     }
 
-    public Singer addSongs(String singerId, List<SongRequestBody> songBody) throws ConstraintViolationException{
+    public Singer addSongs(String singerId, SongRequestBody... songBody) throws ConstraintViolationException{
         Singer singer = repository.findBySingerId(UUID.fromString(singerId));
         if(singer == null){
             throw new IllegalArgumentException("This singer doesn't exist");

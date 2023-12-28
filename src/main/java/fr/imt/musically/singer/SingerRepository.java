@@ -14,4 +14,7 @@ public interface SingerRepository extends JpaRepository<Singer, Long> {
     List<Singer> findByLastName(String lastName);
 
     Singer findBySingerId(UUID singerId);
+
+    // Find all singers that contain the given string in their first name or last name by ignoring case
+    List<Singer> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String firstName, String lastName);
 }

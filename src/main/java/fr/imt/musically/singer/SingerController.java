@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,26 +40,7 @@ public class SingerController {
         responses = {
             @ApiResponse(
                 responseCode = "200",
-                description = "Found all singers",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(
-                        value = """
-                                [
-                                    {
-                                        "id": 1,
-                                        "firstName": "Nancy",
-                                        "lastName": "Ajram"
-                                    },
-                                    {
-                                        "id": 2,
-                                        "firstName": "Taylor",
-                                        "lastName": "Swift"
-                                    }
-                                ]
-                            """
-                    )
-                )
+                description = "Found all singers"
             )
         }
     )
@@ -144,8 +126,11 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Song> updateSinger(@PathVariable("singer_id") String singerId, @PathVariable("song_id") String songId, @PathVariable("rating") String rating) {
-
+    public ResponseEntity<Song> updateSinger(
+        @PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId,
+        @PathVariable("song_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String songId,
+        @PathVariable("rating") @Pattern(regexp = "[0-5](\\.[0-9]+)?") String rating
+    ) {
         return ResponseEntity.ok(service.updateSongRatingOfASinger(singerId, songId, Double.parseDouble(rating)));
     }
 
@@ -167,7 +152,14 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> addSongs(@PathVariable("singer_id") String singerId, @Valid @RequestBody List<SongRequestBody> songBody) {
+    public ResponseEntity<Singer> addSongs(
+            @PathVariable("singer_id")
+            @Pattern(
+                regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
+            )
+            String singerId,
+            @Valid @RequestBody SongRequestBody... songBody
+    ) {
         return ResponseEntity.ok(service.addSongs(singerId, songBody));
     }
 }
