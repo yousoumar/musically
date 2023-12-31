@@ -33,12 +33,7 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 FROM builder AS prod
 
 # Build application
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package
 
 # Run application
 CMD ["java", "-jar", "target/musically-0.0.1-SNAPSHOT.jar"]
-
-
-FROM builder AS test
-
-RUN ./mvnw test
