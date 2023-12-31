@@ -51,7 +51,7 @@ public class SingerController {
     @GetMapping(path = "/{singer_id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Get a singer with its songs",
-        description = "Get a singer with its songs",
+        description = "Get a singer with its songs. The songs can be filtered by their rating using the songMinimumRating query parameter.",
         tags = {"singers"},
         responses = {
             @ApiResponse(
@@ -65,8 +65,8 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId, @RequestParam(required = false, defaultValue = "0") Double songMinimumRating) {
-        return ResponseEntity.ok(service.getSinger(singerId, songMinimumRating));
+    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId, @RequestParam(required = false, defaultValue = "0") @Pattern(regexp = "[0-5](\\.[0-9]+)?") String  songMinimumRating) {
+        return ResponseEntity.ok(service.getSinger(singerId, Double.parseDouble(songMinimumRating)));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
