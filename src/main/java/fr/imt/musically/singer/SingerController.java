@@ -65,8 +65,8 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId) {
-        return ResponseEntity.ok(service.getSinger(singerId));
+    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId, @RequestParam(required = false, defaultValue = "0") Double songMinimumRating) {
+        return ResponseEntity.ok(service.getSinger(singerId, songMinimumRating));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
