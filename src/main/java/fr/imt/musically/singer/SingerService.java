@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SingerService {
@@ -38,6 +40,22 @@ public class SingerService {
             (firstName != null || lastName != null) ?
                 repository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(firstName, lastName) :
                 repository.findAll();
+    }
+
+    public Singer getSinger(String singerId, Double songMinimumRating) {
+        Singer singer = repository.findBySingerId(UUID.fromString(singerId));
+
+        if (singer == null) {
+            throw new IllegalArgumentException("This singer doesn't exist");
+        }
+
+        Set<Song> filteredSongs = singer.getSongs().stream()
+                .filter(song -> song.getRating() >= songMinimumRating)
+                .collect(Collectors.toSet());
+
+        singer.setSongs(filteredSongs);
+        
+        return singer;
     }
 
     private Singer getSingerFromBodyRequest(SingerRequestBody singerBody){
@@ -98,4 +116,6 @@ public class SingerService {
 
         return singer;
     }
+
+
 }
