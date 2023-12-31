@@ -51,6 +51,11 @@ services:
       - ./src:/app/src
       - ./pom.xml:/app/pom.xml
       - ./target:/app/target
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 20s
+      retries: 3
 
 volumes:
   db:
