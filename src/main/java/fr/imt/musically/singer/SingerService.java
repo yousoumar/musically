@@ -40,6 +40,17 @@ public class SingerService {
                 repository.findAll();
     }
 
+    public Singer getSinger(String singerId) {
+        Singer singer = repository.findBySingerId(UUID.fromString(singerId));
+
+
+        if (singer == null) {
+            throw new IllegalArgumentException("This singer doesn't exist");
+        }
+
+        return singer;
+    }
+
     private Singer getSingerFromBodyRequest(SingerRequestBody singerBody){
         bodyValidator.validateBodyRequest(singerBody);
         return repository.findByFirstNameAndLastName(singerBody.getFirstName(), singerBody.getLastName());
@@ -98,4 +109,6 @@ public class SingerService {
 
         return singer;
     }
+
+
 }

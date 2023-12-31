@@ -7,7 +7,6 @@ import fr.imt.musically.song.Song;
 import fr.imt.musically.request.SongRequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
@@ -46,6 +45,28 @@ public class SingerController {
     )
     public ResponseEntity<List<Singer>> getAllSingers(@RequestParam(required = false) String firstName, @RequestParam(required = false) String lastName) {
         return ResponseEntity.ok(service.getAllSingers(firstName, lastName));
+    }
+
+
+    @GetMapping(path = "/{singer_id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Get a singer with its songs",
+        description = "Get a singer with its songs",
+        tags = {"singers"},
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Returns a singer with its songs"
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = @Content
+            )
+        }
+    )
+    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId) {
+        return ResponseEntity.ok(service.getSinger(singerId));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
