@@ -2,8 +2,8 @@ package fr.imt.musically.singer;
 
 import fr.imt.musically.request.BodyValidator;
 import fr.imt.musically.request.SingerRequestBody;
-import fr.imt.musically.song.Song;
 import fr.imt.musically.request.SongRequestBody;
+import fr.imt.musically.song.Song;
 import fr.imt.musically.song.SongRepository;
 import fr.imt.musically.song.SongService;
 import jakarta.validation.ConstraintViolationException;
@@ -50,15 +50,15 @@ public class SingerService {
         }
 
         Set<Song> filteredSongs = singer.getSongs().stream()
-                .filter(song -> song.getRating() >= songMinimumRating)
-                .collect(Collectors.toSet());
+            .filter(song -> song.getRating() >= songMinimumRating)
+            .collect(Collectors.toSet());
 
         singer.setSongs(filteredSongs);
-        
+
         return singer;
     }
 
-    private Singer getSingerFromBodyRequest(SingerRequestBody singerBody){
+    private Singer getSingerFromBodyRequest(SingerRequestBody singerBody) {
         bodyValidator.validateBodyRequest(singerBody);
         return repository.findByFirstNameAndLastName(singerBody.getFirstName(), singerBody.getLastName());
     }
@@ -107,7 +107,7 @@ public class SingerService {
             throw new IllegalArgumentException("The rating must be between 0 and 5");
         }
 
-        if(!singer.getSongs().contains(song)){
+        if (!singer.getSongs().contains(song)) {
             throw new IllegalArgumentException("This singer doesn't have this song");
         }
 
@@ -116,9 +116,9 @@ public class SingerService {
         return songRepository.save(song);
     }
 
-    public Singer addSongs(String singerId, SongRequestBody... songBody) throws ConstraintViolationException{
+    public Singer addSongs(String singerId, SongRequestBody... songBody) throws ConstraintViolationException {
         Singer singer = repository.findBySingerId(UUID.fromString(singerId));
-        if(singer == null){
+        if (singer == null) {
             throw new IllegalArgumentException("This singer doesn't exist");
         }
 
@@ -126,5 +126,5 @@ public class SingerService {
 
         return singer;
     }
-    
+
 }

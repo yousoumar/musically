@@ -79,7 +79,7 @@ public class Singer {
         return songs;
     }
 
-    public void setSongs(Set<Song> songs){
+    public void setSongs(Set<Song> songs) {
         this.songs = songs;
     }
 

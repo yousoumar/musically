@@ -13,16 +13,14 @@ import java.util.UUID;
 @Table(name = "songs")
 public class Song {
 
+    private final UUID songId = UUID.randomUUID();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
-
-    private final UUID songId = UUID.randomUUID();
-
     private String title;
 
-    @Column(name="year_of_release")
+    @Column(name = "year_of_release")
     private Integer year;
 
     private Double rating;

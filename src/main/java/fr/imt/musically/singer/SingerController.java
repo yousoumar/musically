@@ -44,7 +44,7 @@ public class SingerController {
     }
 
 
-    @GetMapping(path = "/{singer_id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{singer_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Get a singer with its songs",
         description = "Get a singer with its songs. The songs can be filtered by their rating using the songMinimumRating query parameter.",
@@ -61,7 +61,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId, @RequestParam(required = false, defaultValue = "0") @Pattern(regexp = "[0-5](\\.[0-9]+)?") String  songMinimumRating) {
+    public ResponseEntity<Singer> getOneSinger(@PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId, @RequestParam(required = false, defaultValue = "0") @Pattern(regexp = "[0-5](\\.[0-9]+)?") String songMinimumRating) {
         return ResponseEntity.ok(service.getSinger(singerId, Double.parseDouble(songMinimumRating)));
     }
 
@@ -87,7 +87,7 @@ public class SingerController {
         return ResponseEntity.ok(service.createSinger(singer));
     }
 
-    @DeleteMapping(path = "/{singer_id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{singer_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Delete a singer",
         description = "Delete a singer in the database",
@@ -106,8 +106,8 @@ public class SingerController {
         }
     )
     public ResponseEntity<Object> deleteSinger(@PathVariable("singer_id")
-                                                   @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}")
-                                                   String singerId) {
+                                               @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}")
+                                               String singerId) {
         service.deleteSinger(singerId);
         return ResponseEntity.noContent().build();
     }
@@ -157,12 +157,12 @@ public class SingerController {
         }
     )
     public ResponseEntity<Singer> addSongs(
-            @PathVariable("singer_id")
-            @Pattern(
-                regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
-            )
-            String singerId,
-            @Valid @RequestBody SongRequestBody... songBody
+        @PathVariable("singer_id")
+        @Pattern(
+            regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"
+        )
+        String singerId,
+        @Valid @RequestBody SongRequestBody... songBody
     ) {
         return ResponseEntity.ok(service.addSongs(singerId, songBody));
     }
