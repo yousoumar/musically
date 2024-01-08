@@ -31,6 +31,7 @@ public class LoadDatabase {
 
         log.info("Initializing database");
         return args -> {
+
             Singer nancy = new Singer("Nancy", "Ajram");
             Singer taylor = new Singer("Taylor", "Swift");
             Singer adele = new Singer("Adele", "Adkins");
@@ -49,6 +50,7 @@ public class LoadDatabase {
             Song song10 = new Song("You Belong With Me", 2008, 4.5, taylor);
 
             songRepository.saveAll(List.of(song1, song2, song3, song4, song5, song6, song7, song8, song9, song10));
+
 
         };
     }
