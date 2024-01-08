@@ -24,33 +24,23 @@ This is a simple API REST to manage a music library.
 2. Copy environment variables file:
 
     ```bash
-    cp .env.dev .env
+    cp .env.example .env
     ```
 
-3. Build the project:
 
-    ```bash
-    mvn clean install
-    ```
-
-4. Run all services:
+3. Run all services:
 
     ```bash
     docker compose up -d
    ```
    The following services will be available:
-    - PostgreSQL: [http://localhost:5432](http://localhost:5432)
-    - Adminer: [http://localhost:8081](http://localhost:8081)(for database administration)
-   
-5. Run the application:
+    - PostgresSQL: [http://postgres.musically.localhost](http://postgres.musically.localhost) or [http://localhost:5432](http://localhost:5432) (the database)
+    - Adminer: [http://adminer.musically.localhost](http://adminer.musically.localhost) or [http://localhost:8081](http://localhost:8081) (for database administration)
+    - Musically: [http://api.musically.localhost](http://api.musically.localhost) or [http://localhost:8080](http://localhost:8080) (the application)
+    - Swagger: [http://api.musically.localhost/swagger-ui.html](http://api.musically.localhost/swagger-ui.html) or [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) (the API documentation)
 
-    ```bash
-    mvn spring-boot:run
-    ```
+4. Open the application in your browser at [http://localhost:8080](http://localhost:8080)
 
-6. Open the application in your browser at [http://localhost:8080](http://localhost:8080)
-
-## Usage
 
 ## Authors
 

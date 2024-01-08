@@ -79,6 +79,9 @@ public class Singer {
         return songs;
     }
 
+    public void setSongs(Set<Song> songs){
+        this.songs = songs;
+    }
 
     public void addSong(Song song) {
         this.songs.add(song);
