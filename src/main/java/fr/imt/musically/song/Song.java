@@ -22,6 +22,7 @@ public class Song {
 
     private String title;
 
+    @Column(name="year_of_release")
     private Integer year;
 
     private Double rating;
