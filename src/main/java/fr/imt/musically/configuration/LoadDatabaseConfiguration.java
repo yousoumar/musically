@@ -15,13 +15,13 @@ import org.springframework.core.env.Environment;
 import java.util.List;
 
 @Configuration
-public class LoadDatabase {
+public class LoadDatabaseConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadDatabaseConfiguration.class);
 
     private final Environment env;
 
-    public LoadDatabase(Environment env) {
+    public LoadDatabaseConfiguration(Environment env) {
         this.env = env;
     }
 

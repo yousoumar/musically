@@ -12,8 +12,8 @@ public class BodyValidator {
 
     private final Validator validator;
 
-    public BodyValidator(Validator validator){
-        this.validator=validator;
+    public BodyValidator(Validator validator) {
+        this.validator = validator;
     }
 
 

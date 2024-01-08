@@ -13,7 +13,7 @@ public class AddSingerRequestBody implements RequestBody {
         this.singerId = singerId;
     }
 
-    public String getSingerId(){
+    public String getSingerId() {
         return this.singerId;
     }
 }
