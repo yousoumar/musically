@@ -5,7 +5,4 @@ public class ViewApplication {
     public interface SingerWithoutSongsView{
     }
 
-    public interface SingerWithSongsView extends SingerWithoutSongsView{
-    }
-
 }

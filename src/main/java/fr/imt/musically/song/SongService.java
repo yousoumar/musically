@@ -30,14 +30,12 @@ public class SongService {
         return songRepository.findAll();
     }
 
-    // It is always transactional with JPA
     @Transactional(rollbackOn = Exception.class)
     public Set<Song> createSongs(Singer singer, SongRequestBody... songBody) {
 
         for (SongRequestBody song : songBody) {
             bodyValidator.validateBodyRequest(song);
 
-            // Check if the song already exists
             if (songRepository.findByTitleAndYear(song.getTitle(), song.getYear()) != null) {
                 throw new IllegalArgumentException("This song already exists");
             }
