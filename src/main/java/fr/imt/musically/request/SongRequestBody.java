@@ -6,18 +6,23 @@ public class SongRequestBody implements RequestBody {
 
     @NotBlank
     @Size(min = 2, max = 255)
-    private String title;
+    private final String title;
 
     @NotNull
     @Min(1900)
     @Max(2023)
-    private Integer year;
+    private final Integer year;
 
     @NotNull
     @Min(0)
     @Max(5)
-    private Double rating;
+    private final Double rating;
 
+    public SongRequestBody(String title, Integer year, Double rating) {
+        this.title = title;
+        this.year = year;
+        this.rating = rating;
+    }
 
     public String getTitle() {
         return this.title;
