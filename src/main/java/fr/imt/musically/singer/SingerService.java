@@ -72,13 +72,23 @@ public class SingerService {
         return repository.save(new Singer(singer.getFirstName(), singer.getLastName()));
     }
 
-    public void deleteSinger(SingerRequestBody singerBody) throws IllegalArgumentException {
-        Singer singer = getSingerFromBodyRequest(singerBody);
-        if(singer == null){
+    public void deleteSinger(String singerId) {
+        Singer singer = repository.findBySingerId(UUID.fromString(singerId));
+
+        if (singer == null) {
             throw new IllegalArgumentException("This singer doesn't exist");
         }
 
+        Set<Song> songs = singer.getSongs();
+
+        songs.forEach(song -> song.getSingers().remove(singer));
+
         repository.delete(singer);
+
+        songRepository.saveAll(songs);
+
+        songRepository.deleteAll(songRepository.findAllBySingersIsEmpty());
+
     }
 
     public Song updateSongRatingOfASinger(String singerId, String songId, Double rating) {
@@ -116,6 +126,5 @@ public class SingerService {
 
         return singer;
     }
-
-
+    
 }
