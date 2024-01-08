@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 @RestController
@@ -106,7 +107,7 @@ public class SingerController {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{singer_id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Delete a singer",
         description = "Delete a singer in the database",
@@ -124,8 +125,10 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Object> deleteSinger(@Valid @RequestBody SingerRequestBody singer) {
-        service.deleteSinger(singer);
+    public ResponseEntity<Object> deleteSinger(@PathVariable("singer_id")
+                                                   @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}")
+                                                   String singerId) {
+        service.deleteSinger(singerId);
         return ResponseEntity.noContent().build();
     }
 
