@@ -1,5 +1,0 @@
-http:
-  routers:
-    traefik:
-      rule: "Host(`traefik.musically.localhost`)"
-      service: "api@internal"

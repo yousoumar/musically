@@ -34,3 +34,6 @@ build/
 
 ### Environments files ###
 .env
+
+### Maven installs comming from the image ###
+.m2
