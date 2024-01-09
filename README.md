@@ -31,13 +31,14 @@ This is a simple API REST to manage a music library.
 3. Run all services:
 
     ```bash
-    docker compose up -d
+    docker-compose up --build
    ```
    The following services will be available:
-    - PostgresSQL: [http://postgres.musically.localhost](http://postgres.musically.localhost) or [http://localhost:5432](http://localhost:5432) (the database)
-    - Adminer: [http://adminer.musically.localhost](http://adminer.musically.localhost) or [http://localhost:8081](http://localhost:8081) (for database administration)
-    - Musically: [http://api.musically.localhost](http://api.musically.localhost) or [http://localhost:8080](http://localhost:8080) (the application)
-    - Swagger: [http://api.musically.localhost/swagger-ui.html](http://api.musically.localhost/swagger-ui.html) or [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) (the API documentation)
+    - PostgresSQL (the database):  [http://localhost:5432](http://localhost:5432)
+    - Adminer (database administration GUI): [http://localhost:8081](http://localhost:8081)
+    - Musically (the application): [http://localhost:8080](http://localhost:8080) 
+    - Swagger (the API documentation): [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) 
+
 
 4. Open the application in your browser at [http://localhost:8080](http://localhost:8080)
 
