@@ -114,14 +114,14 @@ public class SingerController {
 
     @PutMapping(path = "/{singer_id}/{song_id}/{rating}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
-        summary = "Update a singer",
-        description = "Update a singer in the database",
+        summary = "Update a singer's song rating",
+        description = "Update a singer's song rating in the database.",
         tags = {"singers"},
 
         responses = {
             @ApiResponse(
                 responseCode = "200",
-                description = "Updated a singer"
+                description = "Singer's song updated"
             ),
             @ApiResponse(
                 responseCode = "400",
@@ -130,7 +130,7 @@ public class SingerController {
             )
         }
     )
-    public ResponseEntity<Song> updateSinger(
+    public ResponseEntity<Song> updateSongRatingOfASinger(
         @PathVariable("singer_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String singerId,
         @PathVariable("song_id") @Pattern(regexp = "[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}") String songId,
         @PathVariable("rating") @Pattern(regexp = "[0-5](\\.[0-9]+)?") String rating
