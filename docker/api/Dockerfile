@@ -3,7 +3,6 @@ FROM eclipse-temurin:21-jdk-alpine AS builder
 # Install inotify-tools and dos2unix for live reload
 RUN apk add --no-cache inotify-tools dos2unix curl jq
 
-
 WORKDIR /app
 
 COPY pom.xml .
@@ -27,6 +26,9 @@ COPY docker/api/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Make entrypoint script executable
 RUN dos2unix /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
+
+# Install Bash for entrypoint script
+RUN apk add --no-cache bash
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
