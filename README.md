@@ -1,22 +1,22 @@
 # Musically
 
-This project, built as a school project with [Manne Emile KITSOUKOU](https://github.com/jarhead-killgrave) and [Jana ZEBIAN](https://github.com/JanaZebian) is a REST API to manage a music library, built with `Java` and `Spring`.
+This project, built as a school project with [Manne Emile KITSOUKOU](https://github.com/jarhead-killgrave) and [Jana ZEBIAN](https://github.com/JanaZebian) is a REST API to manage a music library, built with Java, Spring, PostgreSQL, and Docker.
 
-To test it out locally on your machine, you need Java 21, Maven 3.8 or compatible, Docker 24.0.6 or compatible, Docker Compose 2.23.0 or compatible.
+To test it out locally on your machine, you need Docker 24.0.6 or compatible, and Docker Compose 2.23.0 or compatible.
 
-Clone the repository:
+First clone the repository:
 
 ```bash
 git clone https://github.com/yousoumar/musically.git
 ```
 
-Copy environment variables file:
+Then copy the environment variables file:
 
 ```bash
 cp .env.example .env
 ```
 
-Run all services:
+Finally run all services:
 
 ```bash
 docker-compose up --build
